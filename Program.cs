@@ -13,6 +13,9 @@ String tenantID = "e4cc6b96-39df-4494-b0e7-bce164bda677";
 // Admin variables
 String adminConnectionString = "Server=backup.application.database.production.internal.sawiday.com; Database=rorix_app; Uid=<username>; Pwd=<password>;";
 
+// Webstock variables
+String webstockConnectionString = "Server=webstock.database.production.internal.sawiday.com; TrustServerCertificate=True; Database=rorix_stock; User Id=<username>; Password=<password>;";
+
 // Data
 Dictionary<String, User> userData = new();
 
@@ -26,6 +29,10 @@ adService.ProcessData(userData);
 // Fetch admin profiles
 AdminService adminService = new AdminService(adminConnectionString);
 adminService.ProcessData(userData);
+
+// Fetch webstock profile
+WebstockService webstockService = new WebstockService(webstockConnectionString);
+webstockService.ProcessData(userData);
 
 // Fetch license information
 LicenseService licenseService = new LicenseService(microsoftGraphCredentials);

@@ -6,4 +6,5 @@ public class User
     public String? Title { get; set; }
     public List<String> Licenses { get; set; } = new List<String>();
     public List<String> AdminProfiles { get; set; } = new List<String>();
+    public String? Webstock { get; set; }
 }
