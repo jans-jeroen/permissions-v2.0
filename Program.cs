@@ -16,6 +16,10 @@ String adminConnectionString = "Server=backup.application.database.production.in
 // Webstock variables
 String webstockConnectionString = "Server=webstock.database.production.internal.sawiday.com; TrustServerCertificate=True; Database=rorix_stock; User Id=<username>; Password=<password>;";
 
+// Youtrack variables
+String youtrackServer = "https://relinks.myjetbrains.com";
+String youtrackToken = "<token>";
+
 // Data
 Dictionary<String, User> userData = new();
 
@@ -33,6 +37,10 @@ adminService.ProcessData(userData);
 // Fetch webstock profile
 WebstockService webstockService = new WebstockService(webstockConnectionString);
 webstockService.ProcessData(userData);
+
+// Fetch youtrack roles
+YoutrackService youtrackService = new YoutrackService(youtrackServer, youtrackToken);
+youtrackService.ProcessData(userData);
 
 // Fetch license information
 LicenseService licenseService = new LicenseService(microsoftGraphCredentials);
