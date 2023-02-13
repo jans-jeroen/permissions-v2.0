@@ -42,6 +42,7 @@ public class ActiveDirectoryService : IDataService
             String firstNameUnderscoreLastName = firstName + "_" + lastName;
             String emailAddress = GetAttributeValue(entry, "mail");
             String title = GetAttributeValue(entry, "title");
+            String? functionGroup = GetFunctionGroup(entry);
 
             // Skip users without an e-mail address (TODO: Log)
             if (emailAddress == "")
@@ -54,6 +55,7 @@ public class ActiveDirectoryService : IDataService
             user.FirstName = firstName;
             user.LastName = lastName;
             user.WindowsUsername = username;
+            user.FunctionGroup = functionGroup;
 
             data[emailAddress] = user;
         }
@@ -70,5 +72,30 @@ public class ActiveDirectoryService : IDataService
         }
 
         return value;
+    }
+
+    private String? GetFunctionGroup(SearchResultEntry entry)
+    {
+        String attribute = "memberOf";
+
+        String? functionGroup = null;
+        if (entry.Attributes.Contains(attribute))
+        {
+            for (int i = 0; i < entry.Attributes[attribute].Count; i++)
+            {
+                String? groupName = entry.Attributes[attribute][i].ToString();
+                if (groupName == null || !groupName.StartsWith("CN=FG -")) {
+                    continue;
+                }
+
+                if (functionGroup != null) {
+                    throw new Exception("The entry has multiple function groups");
+                }
+
+                functionGroup = groupName;
+            }
+        }
+
+        return functionGroup;
     }
 }
