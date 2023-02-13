@@ -16,7 +16,7 @@ public class ActiveDirectoryService : IDataService
         this.Port = port;
     }
 
-    public void ProcessData(Dictionary<String, User> data)
+    public void ProcessData(UserData data)
     {
         String ldapSearchBaseDN = "ou=users,ou=reworksnl,dc=reworksnl,dc=local";
         String ldapSearchQuery = "(objectClass=organizationalPerson)";
@@ -50,7 +50,7 @@ public class ActiveDirectoryService : IDataService
                 continue;
             }
 
-            User user = data.TryGetValue(emailAddress, out User u) ? u : new User();
+            User user = data.GetOrCreate(emailAddress);
             user.Title = title;
             user.FirstName = firstName;
             user.LastName = lastName;

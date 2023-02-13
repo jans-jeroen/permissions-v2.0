@@ -12,7 +12,7 @@ public class YoutrackService : IDataService
         this.Token = token;
     }
 
-    public void ProcessData(Dictionary<string, User> data)
+    public void ProcessData(UserData data)
     {
         HttpClient client = new HttpClient()
         {
@@ -39,7 +39,7 @@ public class YoutrackService : IDataService
         {
             String emailAddress = user.Profile.Email.Email;
 
-            User userData = data.TryGetValue(emailAddress, out User u) ? u : new User();
+            User userData = data.GetOrCreate(emailAddress);
 
             foreach (RolesRecord role in user.TransitiveProjectRoles)
             {

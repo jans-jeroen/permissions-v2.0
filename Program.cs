@@ -21,7 +21,7 @@ String youtrackServer = "https://relinks.myjetbrains.com";
 String youtrackToken = "<token>";
 
 // Data
-Dictionary<String, User> userData = new();
+UserData userData = new();
 
 MicrosoftGraphAuthentication credentialFetcher = new MicrosoftGraphAuthentication(clientID, tenantID);
 TokenCredential microsoftGraphCredentials = credentialFetcher.GetCredentials();

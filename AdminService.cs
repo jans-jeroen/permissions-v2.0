@@ -9,7 +9,7 @@ public class AdminService : IDataService
         this.ConnectionString = connectionString;
     }
 
-    public void ProcessData(Dictionary<string, User> data)
+    public void ProcessData(UserData data)
     {
         MySqlConnection connection = new MySqlConnection(this.ConnectionString);
         connection.Open();
@@ -22,7 +22,7 @@ public class AdminService : IDataService
             String emailAddress = reader.GetString("email");
             String profile = reader.GetString("name");
 
-            User userData = data.TryGetValue(emailAddress, out User u) ? u : new User();
+            User userData = data.GetOrCreate(emailAddress);
 
             userData.AdminProfiles.Add(profile);
 

@@ -1,4 +1,4 @@
 public interface IDataService
 {
-    public void ProcessData(Dictionary<String, User> data);
+    public void ProcessData(UserData data);
 }

@@ -12,7 +12,7 @@ class LicenseService : IDataService
         this.Credentials = credentials;
     }
 
-    public void ProcessData(Dictionary<string, User> data)
+    public void ProcessData(UserData data)
     {
         var scopes = new[] { "Organization.Read.All", "User.Read.All" };
 
@@ -36,7 +36,7 @@ class LicenseService : IDataService
         var users = graphClient.Users.Request().Select("id,mail,assignedLicenses").GetAsync().GetAwaiter().GetResult();
         foreach (var user in users)
         {
-            User userData = data.TryGetValue(user.Mail, out User u) ? u : new User();
+            User userData = data.GetOrCreate(user.Mail);
             
             foreach (var license in user.AssignedLicenses)
             {

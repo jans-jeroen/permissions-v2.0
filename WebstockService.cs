@@ -10,7 +10,7 @@ public class WebstockService : IDataService
         this.ConnectionString = connectionString;
     }
 
-    public void ProcessData(Dictionary<string, User> data)
+    public void ProcessData(UserData data)
     {
         SqlConnection connection = new SqlConnection(this.ConnectionString);
         connection.Open();
@@ -30,8 +30,7 @@ public class WebstockService : IDataService
                 continue;
             }
 
-
-            User userData = data.TryGetValue(emailAddress.Value, out User u) ? u : new User();
+            User userData = data.GetOrCreate(emailAddress.Value);
 
             userData.Webstock = profile;
 
