@@ -93,7 +93,8 @@ public class ActiveDirectoryService : IDataService
                     throw new Exception("The entry has multiple function groups");
                 }
 
-                functionGroup = groupName;
+                // This Substring isn't 100% correct but it's the fastest solution for now
+                functionGroup = groupName.Substring(3, groupName.IndexOf(',') - 3);
             }
         }
 
