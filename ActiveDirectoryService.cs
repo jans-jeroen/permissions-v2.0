@@ -56,6 +56,7 @@ public class ActiveDirectoryService : IDataService
             user.LastName = lastName;
             user.WindowsUsername = username;
             user.FunctionGroup = functionGroup;
+            user.WindowsDistinguishedName = entry.DistinguishedName;
 
             data[emailAddress] = user;
         }

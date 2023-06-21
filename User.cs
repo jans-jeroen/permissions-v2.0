@@ -4,6 +4,7 @@ public class User
     public String? FirstName { get; set; }
     public String? LastName { get; set; }
     public String? WindowsUsername { get; set; }
+    public String? WindowsDistinguishedName { get; set; }
     public String? Title { get; set; }
     public HashSet<String> Licenses { get; } = new HashSet<String>();
     public HashSet<String> AdminProfiles { get; } = new HashSet<String>();
