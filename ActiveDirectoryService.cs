@@ -36,6 +36,7 @@ public class ActiveDirectoryService : IDataService
 
         foreach (SearchResultEntry entry in response.Entries)
         {
+            int flags = GetAttributeIntValue(entry, "userAccountControl");
             String username = GetAttributeValue(entry, "sAMAccountName");
             String firstName = GetAttributeValue(entry, "givenName");
             String lastName = GetAttributeValue(entry, "sn");
@@ -47,6 +48,11 @@ public class ActiveDirectoryService : IDataService
             // Skip users without an e-mail address (TODO: Log)
             if (emailAddress == "")
             {
+                continue;
+            }
+
+            if (Convert.ToBoolean(flags & 0x00000002)) {
+                Console.WriteLine("Skipping user {0} as it is inactive", username);
                 continue;
             }
 
@@ -75,6 +81,20 @@ public class ActiveDirectoryService : IDataService
         return value;
     }
 
+    private int GetAttributeIntValue(SearchResultEntry entry, String attribute)
+    {
+        Type intType = typeof(int);
+
+        int value = 0;
+
+        if (entry.Attributes.Contains(attribute))
+        {
+            value = (int)entry.Attributes[attribute].GetValues(intType).FirstOrDefault(0);
+        }
+
+        return value;
+    }
+
     private String? GetFunctionGroup(SearchResultEntry entry)
     {
         String attribute = "memberOf";
@@ -85,11 +105,13 @@ public class ActiveDirectoryService : IDataService
             for (int i = 0; i < entry.Attributes[attribute].Count; i++)
             {
                 String? groupName = entry.Attributes[attribute][i].ToString();
-                if (groupName == null || !groupName.StartsWith("CN=FG -")) {
+                if (groupName == null || !groupName.StartsWith("CN=FG -"))
+                {
                     continue;
                 }
 
-                if (functionGroup != null) {
+                if (functionGroup != null)
+                {
                     throw new Exception("The entry has multiple function groups");
                 }
 
