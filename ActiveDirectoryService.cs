@@ -20,7 +20,7 @@ public class ActiveDirectoryService : IDataService
     {
         String ldapSearchBaseDN = "ou=users,ou=reworksnl,dc=reworksnl,dc=local";
         String ldapSearchQuery = "(objectClass=organizationalPerson)";
-        String[] ldapSearchAttributes = { "dn", "mail", "sAMAccountName", "givenName", "sn", "cn", "memberOf", "title" };
+        String[] ldapSearchAttributes = { "dn", "mail", "sAMAccountName", "givenName", "sn", "cn", "memberOf", "title", "userAccountControl" };
 
         LdapDirectoryIdentifier ldapServer = new LdapDirectoryIdentifier(this.server, this.Port);
         NetworkCredential ldapCredentials = new NetworkCredential(this.Username, this.Password);
@@ -51,7 +51,7 @@ public class ActiveDirectoryService : IDataService
                 continue;
             }
 
-            if (Convert.ToBoolean(flags & 0x00000002)) {
+            if (Convert.ToBoolean(flags & 0x0002)) {
                 Console.WriteLine("Skipping user {0} as it is inactive", username);
                 continue;
             }
@@ -83,16 +83,12 @@ public class ActiveDirectoryService : IDataService
 
     private int GetAttributeIntValue(SearchResultEntry entry, String attribute)
     {
-        Type intType = typeof(int);
-
-        int value = 0;
-
-        if (entry.Attributes.Contains(attribute))
-        {
-            value = (int)entry.Attributes[attribute].GetValues(intType).FirstOrDefault(0);
+        string value = GetAttributeValue(entry, attribute);
+        if (value == "") {
+            return 0;
         }
 
-        return value;
+        return int.Parse(value);
     }
 
     private String? GetFunctionGroup(SearchResultEntry entry)
